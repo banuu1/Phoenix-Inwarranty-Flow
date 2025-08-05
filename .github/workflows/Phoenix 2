@@ -1,0 +1,36 @@
+name: Run API Tests
+on 
+ push
+   branches: [main]
+ workflow_dispatch:
+ schedule:
+ -cron: '30 2 * * *'
+ jobs:
+  run-postman-api-tests:
+  run-on: ubuntu-latest
+   steps:
+    - name: Checkout the code
+      uses: actions/checkout@v3
+    - name: Setup node
+      uses:actions/setup-node@v3
+      with
+        node-version: '18'
+     - name: Install newman
+       uses:|
+            npm install -g newman
+            npm install -g newman-reporter-html
+      - name: Run Collection
+        run: |
+          newman run 'Inwarranty-flow-collection B.postman_collection.json' \
+            -e QA.postman_environment.json \
+            -r cli html extra
+            -d testdata.csv
+       - name: Upoload Report
+         if: always()
+         uses: actions/upload-artifact@v4.6.2
+         with
+          name: newman-html-report
+          path:/*.newman html
+            
+  
+  
