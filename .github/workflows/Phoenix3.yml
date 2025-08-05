@@ -1,0 +1,37 @@
+run: Inwarranty flow
+ on
+   push
+     branches: [main]
+    workflow_dispatch:
+    schedule:
+      -cron : '30 20 * * *'
+    jobs:
+      run-api-tests:
+      runs-on: ubuntu-latest
+      steps:
+       - name: Checkout the code
+         uses: actions/checkout@v4.2.2
+       - name: Setup node
+         uses: actions/setup-node@v3.9.1
+         with:
+          node-version: '18'
+        - name: Install newman
+         run: |
+           npm install -g newman
+           npm install -g newman-reporter-htmlextra
+         - name: Run Collection
+           run: |
+             newman run 'Inwarranty-flow-collection B.postman_collection.json' \
+              -e QA.postman_environment.json \
+              -r cli,htmlextra \
+              -d testdata.csv
+         - name: Upload Report
+           if: always()
+           uses: actions/upload-artifact@v4.6.2
+           with
+            name: newman-html-report
+            path:/*.newman html
+
+
+              
+      
