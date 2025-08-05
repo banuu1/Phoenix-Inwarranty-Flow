@@ -34,10 +34,11 @@ jobs:
             -d testdata.csv \
             -r cli,htmlextra
       - name: Newman Report
-        if: always() #ensure archeive executed irrespective of previous step
-        uses: actions/upload-artifact@v4.6.2
-        with: 
+        if: always() # ensure archive executed irrespective of previous step
+        uses: actions/upload-artifact@v4.1.0
+        with:
           name: Newman Report
-          uses: newman/*.html
+          path: newman/*.html
+
           
  
